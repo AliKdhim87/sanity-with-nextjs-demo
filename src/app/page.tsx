@@ -1,95 +1,48 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+import Link from "next/link";
+import { BlogPostList } from "@/components/BlogPostList";
+import { IntroSection } from "@/components/IntroSection";
+import { FETCH_ALL_BLOB_POSTS } from "@/queries";
+import { client } from "../../sanity/lib/client";
 
-export default function Home() {
+export const metadata = {
+  title: "Home page",
+  description: "Blog post website",
+};
+
+const HeroSection = () => (
+  <IntroSection title="Building a Sanity Studio with Next.js">
+    <p className="mt-4 text-lg">
+      A Step-by-Step Guide to Seamlessly Integrate Content Management and Web
+      Development
+    </p>
+    <p className="mt-8 text-xl">
+      Whether you&lsquo;re a developer looking for efficient content management
+      or a content creator seeking a user-friendly platform, this guide will
+      equip you to elevate your web development projects with structured content
+      management and dynamic web applications.
+    </p>
+    <Link
+      href="#start"
+      className="mt-8 inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-full transition duration-300"
+    >
+      Get Started
+    </Link>
+  </IntroSection>
+);
+
+export default async function Home() {
+  const { data } = await client({ query: FETCH_ALL_BLOB_POSTS });
+  const allPosts = data.allPost;
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <>
+      <HeroSection />
+      <div className="bg-blue-100 p-4 rounded-lg shadow-md">
+        <h2 className="text-3xl font-bold text-blue-800 mb-4">
+          The Recent Blog Posts
+        </h2>
+        <BlogPostList posts={allPosts} />
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+    </>
+  );
 }
